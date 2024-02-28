@@ -1,0 +1,100 @@
+■■■ 오라클 접속 및 구동 ■■■
+
+- SQL에서 나가려면 exit -> cls하면 c드라이브로 감(cd\ 하면 C:\Users\sist>cd\여기서 C:\>이렇게 됨)
+
+- 윈도우키 + R -> cmd -> sqlplus/nolog(이렇게 하면 오라클과 관련된 거만 사용 가능)
+
+★ sqlplus는 SQL(Structed Query Language, 구조화된 질의어, 쿼리문) 을 수행하기 위해 Oracle 에서 제공하는
+   도구(틀, 유틸리티)이다.
+- 오라클한테 제대로 물어보는 방법, 무엇을 저장해주라고 말하는 방법을 배울 것임
+
+   ○ 첫 번째 관리자 계정인 sys로 연결해본다.
+      (sys라는 계정을 활용하여 오라클에 접속해본다.)
+- ex) 회장 - 사장 - 전무 - 상무 - 과장 ...
+      (sys -> 회장이 자기의 계정을 sys라고 만든 것이라고 보면 됨)
+- SYS는 계정, SYSDBA는 권한임.
+
+- C:\>sqlplus sys/java006$! as sysdba
+      ------- --- --------- ---------
+     실행파일 계정 비밀번호  권한(as -> ~로서)
+
+    ○ 다시 sys로 접속했던 구문 사용
+- SQL> sqlplus sys/java006$! as sysdba
+=> SP2-0734: unknown command beginning "sqlplus sy..." - rest of line ignored.
+=> 에러 발생
+
+- SQL> connect sys/java006$! as sysdba
+=> Connected.
+
+- hr/lion
+- scott/tiger 
+=> 이렇게 약속해서 사용하자고 함.
+
+- ACCOUNT_STATUS = 계정상태
+
+★ select username, account_status from dba_users;
+==> 앞으로는 from을 먼저 적고 select 적기! 무조건 이렇게 해야됨
+(오라클아 dba_users; 여기 안에 username이랑 account_status이거 찾아줘)
+
+- select username, account_status from dba_users;
+- select 항목1, 항목2, 항목3 from 표이름;
+         -----  -----  -----      ------
+         이름   번호   주소      회원일때, 상품리스트일때 등등
+- 항목보다 from을 먼저 쓰기 때문에 from 먼저 적기.
+
+- update, delete, select, alter ... 이런 제시어를 통해 오라클은 무엇을 해야
+  하는지 판단하고 실행함.
+- grant 권한 부여, revoke 권한 해제
+
+- 안에 있는 내용 바꾸려면 update
+  구조를 바꾸려면 alter(데이터 값 자체가 바뀌는 것은 아님.)
+
+   ○ host 명령어
+- 도스 명령 체계로 전환하거나
+- 라인 단위에서 도스 명령어 입력이 가능하다.
+- 유닉스 계열에서는 host 명령어 뿐 아니라 ! 도 가능하다.
+- 하지만, 윈도우 계열에서는 host 명령어만 사용이 가능하다.
+- host 상태에서 빠져나갈 경우 exit 명령어를 입력한다.
+- SQL에서 host dir, host cls 하면 먹음.
+
+- connect  = conn 가능
+
+   ○ Administrator 가
+- ORA_DBA에 포함되어 있을 경우
+- 취약한 보안정책(sys를 conn 할때 아무 비밀번호나 이름으로 들어가도
+  connect 됨)으로 인해
+- 실무에서는 정말 특별한 경우가 아니고서는 이를 제외시키고 사용해야 한다.
+=> 시작화면 마우스 오른쪽 클릭 -> 컴퓨터 관리 -> 로컬 사용자 및 관리
+   -> 방법 1 -> 사용자 들어가서 모든 파일 마우스 오른쪽 클릭 -> 속성
+   -> ORA_DBA 제거
+   -> 방법 2 -> 그룹 -> ORA_DBA -> 마우스 오른쪽 클릭 -> 속성
+   -> sist 제거
+
+- immediate = 즉각 중지하는 것.
+
+- sql에서는 ;이 종결자임 -> 모든 구문에서 찍어야 됨
+-> 안찍어도 되는 것은 sqlplus를 쓰고 있고 그 안에 있는 유틸리티를 사용하고
+있기 때문에 안써도 되는 것. (cmd에서나 ; 안찍지 오라클 들어가면 거의 다 씀)
+
+- sysoper은 public으로 설정되어 있음. public 나오면 운영자구나라고 알면 됨.
+
+   ○ 권한관련 필기
+- SQL> conn hr/lion as sysoper -> sysoper의 권한을 받았을때
+- 일반 사용자료 가려면 SQL> conn hr/lion 하면 됨.
+
+- 실무에서는 conn hr 이렇게 접속 후 비밀번호 입력하는데
+  비밀번호 입력해도 아무것도 안나오지만 다 써짐. (보안 때문)
+
+- /*=================================
+  ※ SELECT 문의 처리(PARSING) 순서(무조건 외우기)
+     
+    SELECT 컬럼명  -- ⑤ ┐
+    FROM 테이블명  -- ① ┘
+    WHERE 조건절   -- ② +          --> + 있을 수도 없을 수도 있는 옵션명
+    GROUP BY 절    -- ③ +
+    HAVING 조건절  -- ④ +
+    ORDER BY 절    -- ⑥ +
+    
+=================================*/
+
+
